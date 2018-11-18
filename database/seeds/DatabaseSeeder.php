@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         BooksCategory::truncate();
 
         factory(User::class,3)->create();
-        factory(BooksCategory::class,10)->create();
-        factory(Book::class,200)->create();
+        factory(BooksCategory::class,3)->create();
+        factory(Book::class,2)->create();
     }
 }

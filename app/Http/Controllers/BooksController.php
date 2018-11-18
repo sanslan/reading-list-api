@@ -14,18 +14,9 @@ class BooksController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
-        return response()->json(['data' => $books],200);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $user_id = auth()->user()->id;
+        $books = Book::where('user_id',$user_id)->get();
+        return response()->json( $books,200);
     }
 
     /**
@@ -36,7 +27,22 @@ class BooksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title'=> ['required'],
+            'description'=> ['required'],
+            'image'=> ['required'],
+        ]);
+        $imagename = $request->image->store('images');
+
+        $book = Book::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => $imagename,
+            'user_id' => auth()->user()->id,
+            'books_category_id' =>1
+        ]);
+
+        return $book;
     }
 
     /**
@@ -48,17 +54,6 @@ class BooksController extends Controller
     public function show(Book $book)
     {
         return response()->json(['data' => $book], 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Book  $book
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Book $book)
-    {
-        //
     }
 
     /**

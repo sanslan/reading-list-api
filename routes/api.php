@@ -17,6 +17,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('books','BooksController')->middleware('auth:api');
+Route::resource('books','BooksController')->except(['create','edit'])->middleware('auth:api');
+Route::post('logout','AuthController@logout')->middleware('auth:api');
 
+Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
