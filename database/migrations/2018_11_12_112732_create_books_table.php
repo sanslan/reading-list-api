@@ -18,7 +18,7 @@ class CreateBooksTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('books_category_id');
+            $table->unsignedInteger('books_category_id')->nullable();
             $table->string('image');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('books_category_id')->references('id')->on('books_categories');

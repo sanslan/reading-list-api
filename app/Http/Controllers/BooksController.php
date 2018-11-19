@@ -30,16 +30,16 @@ class BooksController extends Controller
         $request->validate([
             'title'=> ['required'],
             'description'=> ['required'],
-            'image'=> ['required'],
+            'image'=> ['image'],
         ]);
-        $imagename = $request->image->store('images');
+        $imagename = $request->image->store('');
 
         $book = Book::create([
             'title' => $request->title,
             'description' => $request->description,
             'image' => $imagename,
             'user_id' => auth()->user()->id,
-            'books_category_id' =>1
+            'books_category_id' => $request->category
         ]);
 
         return $book;
@@ -53,7 +53,7 @@ class BooksController extends Controller
      */
     public function show(Book $book)
     {
-        return response()->json(['data' => $book], 200);
+        return response()->json( $book, 200);
     }
 
     /**
@@ -65,7 +65,21 @@ class BooksController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        //
+        if($request->image){
+            $imagename = $request->image->store('');
+        }else{
+            $imagename = $book->image;
+        }
+        $title = $request->title ?? $book->title;
+        $description = $request->description ?? $book->description;
+        $category = $request->category ?? $book->books_category_id;
+        $book->update([
+            'title' => $title,
+            'description' => $description,
+            'books_category_id' => $category,
+            'image' => $imagename
+        ]);
+        return response()->json( $book, 200);
     }
 
     /**
@@ -76,6 +90,7 @@ class BooksController extends Controller
      */
     public function destroy(Book $book)
     {
-        //
+        $book->delete();
+        return response()->json( $book, 200);
     }
 }

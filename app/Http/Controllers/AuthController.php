@@ -30,11 +30,11 @@ class AuthController extends Controller
         try {
             $http = new \GuzzleHttp\Client;
 
-            $response = $http->post('http://reading.loc/oauth/token', [
+            $response = $http->post(config('services.passport.login_endpoint'), [
                 'form_params' => [
                     'grant_type' => 'password',
-                    'client_id' => '1',
-                    'client_secret' => 'RMynxgXc0c6ga3nd2RZXoCt1U0GJNLApyowlevd7',
+                    'client_id' => config('services.passport.client_id'),
+                    'client_secret' => config('services.passport.client_secret'),
                     'username' => $request->email,
                     'password' => $request->password,
                     'scope' => '',
@@ -45,11 +45,11 @@ class AuthController extends Controller
 
         } catch (\GuzzleHttp\Exception\BadResponseException $e) {
             if($e->getCode() === 400){
-                return response()->json('Please enter password and email');
+                return response()->json('Please enter password and email',400);
             } else if($e->getCode() === 401){
-                return response()->json('Envalid password or email');
+                return response()->json('Envalid password or email',401);
             }
-            return response()->json('Something went wrong');
+            return response()->json('Something went wrong',500);
         }
 
     }
