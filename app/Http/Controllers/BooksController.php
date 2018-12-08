@@ -30,7 +30,7 @@ class BooksController extends Controller
         $request->validate([
             'title'=> ['required'],
             'description'=> ['required'],
-            'image'=> ['image'],
+            'image'=> ['required','image'],
         ]);
         $imagename = $request->image->store('');
 
